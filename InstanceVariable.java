@@ -34,7 +34,7 @@ class Demo {
         ob3.faculty = "BBA-TT";
 
         // Corrected placement of the statements
-        ob1.faculty = "BBA";//The program focuses on static variable And print BBA in the place of faculty
+        //ob1.faculty = "BBA";//The program focuses on static variable And print BBA in the place of faculty
 
         ob1.show();
         ob2.show();
