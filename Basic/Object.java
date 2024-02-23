@@ -1,3 +1,4 @@
+package Basic;
 public class Object {
     String name;
     public void show(){
