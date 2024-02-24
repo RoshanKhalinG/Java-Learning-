@@ -12,12 +12,12 @@ class registrationForm implements ActionListener{
     JButton b1;
     JComboBox cb;
 
-    
-    ButtonGroup bg = new ButtonGroup();
- 
-       registrationForm(){
 
-       
+    ButtonGroup bg = new ButtonGroup();
+
+    registrationForm(){
+
+
         GridBagLayout g1 = new GridBagLayout();
         JFrame f1 = new JFrame();
         f1.setLayout(g1);
@@ -32,7 +32,7 @@ class registrationForm implements ActionListener{
         g1.setConstraints(l1, gbc);
         f1.add(l1);
 
-        
+
         l2= new JLabel("Registration no");
         gbc.gridx=0;
         gbc.gridy=1;
@@ -86,29 +86,29 @@ class registrationForm implements ActionListener{
         gbc.gridx=1;
         gbc.gridy=4;
         g1.setConstraints(r1, gbc);
-        f1.add(r1);   
-        
-        
+        f1.add(r1);
+
+
         r2 = new JRadioButton("Female");
         gbc.gridx=2;
         gbc.gridy=4;
         g1.setConstraints(r2, gbc);
-        f1.add(r2); 
+        f1.add(r2);
 
         bg= new ButtonGroup();
         bg.add(r1);
         bg.add(r2);
-    
-        
 
-        
+
+
+
         b1 = new JButton("Submit");
         gbc.gridx=1;
         gbc.gridy=5;
         g1.setConstraints(b1, gbc);
         f1.add(b1);
 
-        
+
         t4 = new JTextField(50);
         gbc.gridx=0;
         gbc.gridy=6;
@@ -118,55 +118,59 @@ class registrationForm implements ActionListener{
         f1.add(t4);
 
         b1.addActionListener(this);
-        
-       }
 
-       public static void main(String[] args) {
+    }
+
+    public static void main(String[] args) {
         new registrationForm();
-       }
-
-       public void actionPerformed(ActionEvent e)
- {
-          String name = t1.getText();
-          String regis = t2.getText();
-          String Add = t3.getText();
-          String faculty = (String) cb.getSelectedItem();
-          String sex = r1.isSelected() ? "Male" : "Female";
-        
-          t4.setText("Name : "+name+" \nResistration No: "+regis+" \nAddress :"+Add+" \nFaculty :"+faculty+" \nSex :"+sex);
-
- }
- public static Connection getConnection() {
-    try {
-        String driver = "com.mysql.cj.jdbc.Driver";
-        String databaseUrl = "jdbc:mysql://localhost:3306/rrrdb";
-        String username = "root";
-        String password = "roshan";
-        Class.forName(driver);
-        Connection conn = DriverManager.getConnection(databaseUrl, username, password);
-        System.out.println("Database Connected");
-        return conn;
-    } catch (Exception e) {
-        System.out.println("Error: " + e);
-        return null;
     }
-}
 
-public static void insertData() {
-    try {
-        Statement statement = getConnection().createStatement();
-        int result = statement.executeUpdate("INSERT INTO registration ( name, registration,address, department , sex) VALUES (name , registration, address, department, sex)");
-        System.out.println(result);
-        if (result == 1) {
-            System.out.println("Data Inserted");
-        } else {
-            System.out.println("Some error");
+    public void actionPerformed(ActionEvent e)
+    {
+        String name = t1.getText();
+        String regis = t2.getText();
+        String Add = t3.getText();
+        String faculty = (String) cb.getSelectedItem();
+        String sex = r1.isSelected() ? "Male" : "Female";
+
+        t4.setText("Name : "+name+" \nResistration No: "+regis+" \nAddress :"+Add+" \nFaculty :"+faculty+" \nSex :"+sex);
+        insertData(name, regis, Add, faculty, sex);
+    }
+    public static Connection getConnection() {
+        try {
+            String driver = "com.mysql.cj.jdbc.Driver";
+            String databaseUrl = "jdbc:mysql://localhost:3306/rrrdb";
+
+            String username = "root";
+            String password = "";
+            Class.forName(driver);
+            Connection conn = DriverManager.getConnection(databaseUrl, username, password);
+            System.out.println("Database Connected");
+            return conn;
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            return null;
         }
-    } catch (Exception e) {
-        System.out.println("Error: " + e);
+    }
+
+    public static void insertData(String name, String regis, String address, String department, String sex) {
+        try (Connection conn = getConnection();
+             PreparedStatement statement = conn.prepareStatement(
+                     "INSERT INTO regis (Name, Resistration No, Address, Faculty, Sex) VALUES (?, ?, ?, ?, ?)")) {
+            statement.setString(1, name);
+            statement.setString(2, regis);
+            statement.setString(3, address);
+            statement.setString(4, department);
+            statement.setString(5, sex);
+
+            int result = statement.executeUpdate();
+            if (result == 1) {
+                System.out.println("Data Inserted");
+            } else {
+                System.out.println("Some error occurred while inserting data");
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error: " + ex.getMessage());
+        }
     }
 }
-
-    
-}
-
